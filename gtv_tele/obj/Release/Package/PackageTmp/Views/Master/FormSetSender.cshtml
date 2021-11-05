@@ -1,0 +1,164 @@
+﻿
+@{
+    ViewBag.Title = "FormSetSender";
+    Layout = "~/Views/Shared/_TemaAdminLTE.cshtml";
+}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Master
+            <small>FormSetSender</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-database"></i> Master</a></li>
+            <li class="active"><a href="#">FormSetSender</a></li>
+        </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="col-md-12">
+            <div class="row">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="box-header with-border">
+
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+
+                        <!-- form start -->
+                        @using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal", id = "form-setsend", name = "form-setsend" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                            <div class="box-body">
+                                <input type="hidden" id="SettingSenderId" name="SettingSenderId" value="@ViewBag.Id" />
+
+                                <div class="form-group">
+                                    <label class="col-md-2 col-form-label text-md-right">Sender Name</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" id="SettingSenderName" name="SettingSenderName" class="form-control" value="@if (ViewBag.SettingSender != null) { @ViewBag.SettingSender.SettingSenderName }" placeholder="Sender Name" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-2 col-form-label text-md-right">Number Sender</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" id="Number_Sender" name="Number_Sender" class="form-control" value="@if (ViewBag.SettingSender != null) { @ViewBag.SettingSender.Number_Sender }" placeholder="ex 628123456789" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-2 col-form-label text-md-right">ApiId Sender</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" id="ApiId_Sender" name="ApiId_Sender" class="form-control" value="@if (ViewBag.SettingSender != null) { @ViewBag.SettingSender.ApiId_Sender }" placeholder="ApiId Sender" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-2 col-form-label text-md-right">ApiHash Sender</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" id="ApiHash_Sender" name="ApiHash_Sender" class="form-control" value="@if (ViewBag.SettingSender != null) { @ViewBag.SettingSender.ApiHash_Sender }" placeholder="ApiHash Sender" />
+                                    </div>
+                                </div>
+
+                            </div><!-- /.box-body -->
+                            <div class="box-footer">
+                                <button type="submit" class="btn btn-success" value="submit" id="submit" name="submit"><span class="fa fa-send"></span> Submit</button>
+                            </div><!-- /.box-footer -->
+
+                        }
+
+                    </div>
+
+                    <!-- Loading (remove the following to stop the loading)-->
+                    <div class="overlay" id="loading" style="display:none;">
+                        <i class="fa fa-refresh fa-spin"></i>
+                    </div>
+                    <!-- end loading -->
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- /.content -->
+</div>
+
+@section js{
+    <script>
+
+        $(function () {
+
+            $('#form-setsend').submit(function (e) {
+                e.preventDefault();
+                var url = "@Url.Action("SaveSetSender", "Master")";
+                var formData = new FormData($('#form-setsend')[0]);
+                //showLoad();
+
+                Swal.fire({
+                    title: 'Form Add Project',
+                    text: 'Yakin Mau Lanjut ?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Lanjut !',
+                    showLoaderOnConfirm: true,
+                    preConfirm: (login) => {
+                        $.ajax({
+                            url: url,
+                            type: 'POST',
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                            beforeSend: function () {
+                                $('#loading').css('display', 'block');
+                            },
+                            success: function (response) {
+                                //alert(JSON.stringify(response));
+                                //hideLoad();
+                                if (response.status == 200) {
+                                    $('#loading').css('display', 'none');
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: response.message,
+                                        onClose: () => {
+                                            $('#form-setsend')[0].reset();
+                                        }
+                                    });
+                                } else {
+                                    if (response.status == 400) {
+                                        $('#loading').css('display', 'none');
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: response.message,
+                                            onClose: () => {
+                                                $('#form-setsend')[0].reset();
+                                            }
+                                        });
+                                    }
+                                }
+                            },
+                            error: function (response) {
+                                //hideLoad();
+                                $('#loading').css('display', 'none');
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    onClose: () => {
+                                        $('#form-setsend')[0].reset();
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}
+

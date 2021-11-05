@@ -1,0 +1,59 @@
+﻿@using gtv_tele.TagHelpers
+@using gtv_tele.Controllers
+@using gtv_tele.DataAccess
+
+@{
+    MenuController menu = new MenuController();
+    List<Menus> getmenu = menu.GetMenus();
+}
+
+<li class="@Html.IsActiveSub("Dashboard","Index")">
+    <a href="@Url.Action("Index","Dashboard")">
+        <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+        <span class="pull-right-container">
+            @*<i class="fa fa-angle-left pull-right"></i>*@
+        </span>
+    </a>
+</li>
+
+@foreach (Menus men in @getmenu)
+{
+    List<Menus> getSubmenu = menu.SubMenus(men.id);
+    if (getSubmenu.Count > 0)
+    {
+        <li class="@Html.IsActiveMas(men.controller) treeview">
+            <a href="#">
+                <i class="@men.icon"></i> <span>@men.nama_menu</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                @foreach (Menus submen in getSubmenu)
+                {
+
+                    <li>
+                        <a href="@Url.Action(submen.method,submen.controller)">
+                            <i class="fa fa-circle-o"></i> @submen.nama_menu
+                        </a>
+                    </li>
+
+                }
+            </ul>
+        </li>
+    }
+    else
+    {
+        <li class="@Html.IsActiveSub(men.controller,men.method)">
+            <a href="@Url.Action(men.method,men.controller)">
+                <i class="@men.icon"></i> <span>@men.nama_menu</span>
+                <span class="pull-right-container">
+                    @*<i class="fa fa-angle-left pull-right"></i>*@
+                </span>
+            </a>
+        </li>
+    }
+}
+
+
+

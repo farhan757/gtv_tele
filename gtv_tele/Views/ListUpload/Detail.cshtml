@@ -1,0 +1,44 @@
+﻿
+@{
+    Layout = null;
+    var MasterData = ViewBag.DataMaster;
+}
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">@MasterData.Cycle - @MasterData.Part</h4>
+</div>
+<div class="modal-body">
+    <div class="box-body">
+        <div class="card-body table-responsive p-0">
+            <table id="tb_list" class="table table-bordered table-responsive">
+                <thead>
+                    <tr>
+                        <th>Nopol</th>
+                        <th>Nama</th>
+                        <th>NoHP</th>
+                        <th>Status</th>
+                        <th>Message Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var val in ViewBag.DataDetail)
+                    {
+                        <tr>
+                            <td>@val.Account</td>
+                            <td>@val.Nama</td>
+                            <td>@val.NoHP</td>
+                            <td>@val.Status</td>
+                            <td>@val.Message_Status</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+</div>

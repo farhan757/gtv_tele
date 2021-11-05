@@ -1,0 +1,73 @@
+﻿@model gtv_tele.Models.LoginView
+
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+
+<div class="login-box">
+    <div class="login-logo">
+        <a href="#l"><b>Admin</b>GTV</a>
+    </div>
+    <!-- /.login-logo -->
+    <div class="login-box-body">
+        <p class="login-box-msg">Sign in to start your session</p>
+
+        @using (Html.BeginForm(null, null, new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group has-feedback">
+                @*<input type="text" class="form-control" name="username" id="username" onchange="checkName()" placeholder="User Name" required>*@
+                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", @placeholder = "User Name", @onchange = "checkName()" } })
+                <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group has-feedback">
+                @*<input type="password" class="form-control" name="password" id="password" onchange="checkName()" placeholder="Password" required>*@
+                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @onchange = "checkName()", @placeholder = "Password", @type = "password" } })
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="row">
+
+                <!-- /.col -->
+                <div class="col-xs-4">
+                    <button type="submit" id="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+                </div>
+                <!-- /.col -->
+            </div>
+        }
+
+        <a href="@Url.Action("Registration","Account")" class="text-center">Register a new membership</a>
+        <!-- /.login-box-body -->
+    </div>
+    <!-- /.login-box -->
+    <!-- jQuery 3 -->
+    <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap 3.3.7 -->
+    <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- iCheck -->
+    <script src="../../plugins/iCheck/icheck.min.js"></script>
+    <script>
+
+    //function checkName() {
+    //    var nm = document.getElementById("UserName").value;
+    //    var pw = document.getElementById("Password").value;
+
+    //    if (nm != "" && pw != "") {
+    //        $("#submit").removeAttr('disabled');
+    //    }
+    //}
+
+    $(function () {
+
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_square-blue',
+            radioClass: 'iradio_square-blue',
+            increaseArea: '20%' /* optional */
+        });
+    });
+    </script>
+
